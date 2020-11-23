@@ -56,7 +56,7 @@ namespace warcraftlogs_parser
             {
                 graphQLClient.HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {bearerToken}");
 
-                var tryhardRequest = new GraphQLRequest
+                var dpsChartRequest = new GraphQLRequest
                 {
                     Query = @"query($combatId: String){
                             reportData{
@@ -72,7 +72,7 @@ namespace warcraftlogs_parser
                     }
                 };
 
-                var response = await graphQLClient.SendQueryAsync<WarcraftLogsDamageResponse>(tryhardRequest);
+                var response = await graphQLClient.SendQueryAsync<WarcraftLogsDamageResponse>(dpsChartRequest);
                 return response.Data;
             }
         }
