@@ -70,18 +70,19 @@ namespace warcraftlogs_parser
 
                 var dpsChartRequest = new GraphQLRequest
                 {
-                    Query = @"query($combatId: String, $tdt: TableDataType){
+                    Query = @"query($combatId: String, $tdt: TableDataType, $timestampEnd: Float){
                             reportData{
                                 report(code: $combatId)
                                 {
-                                    table(dataType: $tdt, startTime: 0, endTime: 1603992250)
+                                    table(dataType: $tdt, startTime: 0, endTime: $timestampEnd)
                                 }
                             }
                         }",
                     Variables = new
                     {
                         combatId = combatEncounterId,
-                        tdt = tdt.ToString()
+                        tdt = tdt.ToString(),
+                        timestampEnd = (float)DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     }
                 };
 
