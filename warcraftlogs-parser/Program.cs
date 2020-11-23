@@ -16,7 +16,6 @@ namespace warcraftlogs_parser
 {
     class Program
     {
-
         private static IConfiguration BuildConfig()
         {
             var currentAssembly = Assembly.GetEntryAssembly();
@@ -40,13 +39,10 @@ namespace warcraftlogs_parser
                 {
                     new KeyValuePair<string, string>("grant_type", "client_credentials")
                 };
-
                 var httpContent = new FormUrlEncodedContent(formContent);
 
                 var response = await client.PostAsync("https://www.warcraftlogs.com/oauth/token", httpContent);
-
                 var responseString = await response.Content.ReadAsStringAsync();
-
                 var parsedResponse = JsonSerializer.Deserialize<AuthorizationResponse>(responseString);
 
                 return parsedResponse.AccessToken;
@@ -55,7 +51,6 @@ namespace warcraftlogs_parser
 
         private static async Task<WarcraftLogsDamageResponse> GetResponse(string bearerToken)
         {
-
             using (var graphQLClient = new GraphQLHttpClient("https://classic.warcraftlogs.com/api/v2/client",
                 new SystemTextJsonSerializer()))
             {
@@ -78,8 +73,6 @@ namespace warcraftlogs_parser
                 };
 
                 var response = await graphQLClient.SendQueryAsync<WarcraftLogsDamageResponse>(tryhardRequest);
-
-
                 return response.Data;
             }
         }
