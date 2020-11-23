@@ -146,10 +146,19 @@ namespace warcraftlogs_parser
 
         public static string GetCombatIdFromArgs(string[] args)
         {
-            if(args.Count() != 1)
+            if (args.Count() > 1)
                 throw new ArgumentException("Expected exactly 1 argument in form of link to the combat encounter or the code itself");
 
-            var firstArg = args[0];
+            string firstArg;
+            if (args.Count() == 0)
+            {
+                Console.WriteLine("Enter the combat code either in form of https://classic.warcraftlogs.com/reports/J1p4M8gd3b72RLGC or J1p4M8gd3b72RLGC");
+                firstArg = Console.ReadLine();
+            }
+            else
+            {
+                firstArg = args[0];
+            }
 
             if (firstArg.Length == 16) // direct combat id code
                 return firstArg;
