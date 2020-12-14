@@ -2,16 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using GraphQL;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.Extensions.Configuration;
 
 namespace warcraftlogs_parser
@@ -53,12 +45,18 @@ namespace warcraftlogs_parser
                 var orderedHealingOnlyResults =
                     healerOnlyHealingResults.OrderByDescending(x => x.TotalReduced).ThenBy(x => x.Icon);
                 var orderedHealingAllResults =
-                    healerOnlyHealingResults.OrderByDescending(x => x.Total).ThenBy(x => x.Icon);
+                    playerOnlyHealingResults.OrderByDescending(x => x.Total).ThenBy(x => x.Icon);
 
-                var outputFileName = Path.Join(config["defaultSaveDirectory"], $"{DateTime.Now:yyyy-MM-ddTHH_mm_ss}.csv");
+                var outputTasks = new List<OutputProcessing.OutputTask>
+                {
+                    new OutputProcessing.OutputTask("DamageDone", orderedDamageResults.ToList()),
+                    new OutputProcessing.OutputTask("HealingOnly", orderedHealingOnlyResults.ToList()),
+                    new OutputProcessing.OutputTask("HealingAll", orderedHealingAllResults.ToList())
+                };
 
-                OutputProcessing.CreateCsvFile(orderedDamageResults.ToList(), orderedHealingOnlyResults.ToList(),
-                    orderedHealingAllResults.ToList(), outputFileName);
+                var outputFileName = Path.Join(config["defaultSaveDirectory"], $"{DateTime.Now:yyyy-MM-ddTHH_mm_ss}.xlsx");
+
+                OutputProcessing.CreateXlsxFile(outputTasks, outputFileName);
 
                 Console.WriteLine($"Done! Saved as {outputFileName}");
                 Console.WriteLine("Press any key to quit...");

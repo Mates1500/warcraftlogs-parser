@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace warcraftlogs_parser
 {
@@ -42,6 +43,14 @@ namespace warcraftlogs_parser
             public string PermanentEnchantName { get; set; }
         }
 
+        public class AbilityEntry
+        {
+            public string Name { get; set; }
+            public int Total { get; set; }
+            public int TotalReduced { get; set; }
+            public int Type { get; set; }
+        }
+
         public class DataEntry
         {
             public string Name { get; set; }
@@ -59,6 +68,24 @@ namespace warcraftlogs_parser
             public int ActiveTimeReduced { get; set; }
             public int Blocked { get; set; }
             public List<GearEntry> Gear { get; set; }
+            public List<AbilityEntry> Abilities { get; set; }
+
+            public int NatureProtectionTotal =>
+                Abilities.Where(x => x.Name == "Nature Protection").Sum(x => x.Total);
+            public int ShadowProtectionTotal =>
+                Abilities.Where(x => x.Name == "Shadow Protection").Sum(x => x.Total);
+            public int FireProtectionTotal =>
+                Abilities.Where(x => x.Name == "Fire Protection").Sum(x => x.Total);
+            public int FrostProtectionTotal =>
+                Abilities.Where(x => x.Name == "Frost Protection").Sum(x => x.Total);
+            public int HealingPotionTotal =>
+                Abilities.Where(x => x.Name == "Healing Potion").Sum(x => x.Total);
+
+            public string[] ToExcelForm => new[]
+            {
+                Name, Icon, Average.ToString(), AverageReduced.ToString(), ActiveTime.ToString(), ActiveTimeReduced.ToString(), Total.ToString(), TotalReduced.ToString(),
+                NatureProtectionTotal.ToString(), ShadowProtectionTotal.ToString(), FireProtectionTotal.ToString(), FrostProtectionTotal.ToString(), HealingPotionTotal.ToString()
+            };
 
         }
 
