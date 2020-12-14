@@ -4,6 +4,12 @@ namespace warcraftlogs_parser
 {
     public class WarcraftLogsDamageResponse
     {
+        public enum TableDataType
+        {
+            DamageDone,
+            Healing
+        }
+
         public class ReportDataC
         {
             public Report Report { get; set; }
